@@ -6,7 +6,7 @@ const generateId = require('../utils/generateId.util');
 exports.createConsultation = data => {
   const newConsultation = {
     id: generateId(),
-    user_id: 'b2e60dcf-cbbf-413e-9aa0-08fb50a5c675',
+    user_id: data.user_id,
     created_at: Date.now(),
     status: 'NEW',
     can_send_message: false,

@@ -55,6 +55,6 @@ exports.patients = [
 
 exports.messages = [
   {
-    id: 'de13a5fa-028f-418e-9c92-b64827b35fed'
+    id: 'de13a5fa-028f-418e-9c92-b64827b35fed',
   },
 ];
