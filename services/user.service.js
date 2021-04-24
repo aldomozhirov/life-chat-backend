@@ -33,7 +33,7 @@ exports.findConsultationsByUserId = userId => {
       return {
         ...omit(consultation, ['patient_id', 'user_id']),
         patient: findPatientById(consultation.patient_id),
-        lastMessage:
+        last_message:
           consultation.last_message_id &&
           omit(findMessageById(consultation.last_message_id), [
             'consultation_id',
