@@ -15,7 +15,7 @@ exports.users = [
       card_number: '4692065455989192',
     },
     bot: {
-      token: '1724130296:AAFsbq73Jjhk6tdxA_LFgt_9TRs1WWlNKjE',
+      token: '1756313727:AAE6j_yRhSL1PJPpb04Xo762riQSxzWVz0k',
     },
     details: {
       rate: 2000,
