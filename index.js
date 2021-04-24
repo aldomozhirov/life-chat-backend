@@ -5,6 +5,8 @@ const server = require('./server');
 
 const { port } = require('./config').server;
 
+const telegram = require('./telegram');
+
 async function bootstrap() {
   /**
    * Add external services init as async operations (db, redis, etc...)
@@ -15,9 +17,10 @@ async function bootstrap() {
 }
 
 bootstrap()
-  .then(server =>
-    console.log(`🚀 Server listening on port ${server.address().port}!`),
-  )
+  .then(server => {
+    console.log(`🚀 Server listening on port ${server.address().port}!`);
+    telegram.subscribeUpdates('1756313727:AAE6j_yRhSL1PJPpb04Xo762riQSxzWVz0k');
+  })
   .catch(err => {
     setImmediate(() => {
       console.error('Unable to run the server because of the following error:');

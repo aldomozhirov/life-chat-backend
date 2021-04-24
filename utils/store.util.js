@@ -29,20 +29,32 @@ exports.consultations = [
   {
     id: '1a42fc9f-267a-4276-a1cc-f99dfc9ba206',
     user_id: 'b2e60dcf-cbbf-413e-9aa0-08fb50a5c675',
+    last_message_id: 'de13a5fa-028f-418e-9c92-b64827b35fed',
     created_at: '2018-09-28T10:55:51.603Z',
     scheduled_on: '2018-09-28T10:55:51.603Z',
     status: 'NEW',
     duration: 52362345722,
     total_cost: 2546.0,
     can_send_message: false,
-    patient: {
-      id: 'de13a5fa-028f-418e-9c92-b64827b35fed',
-      first_name: 'Иван',
-      last_name: 'Сидоров',
-      username: 'isidorov',
-      avatar_href: 'http://something/damienmarchand/sqdsdqsdsfds',
-      last_activity: '2018-09-28T10:55:51.603Z',
-      first_activity: '2018-09-28T10:55:51.603Z',
-    },
+    patient_id: 'de13a5fa-028f-418e-9c92-b64827b35fed',
+  },
+];
+
+exports.patients = [
+  {
+    id: 'de13a5fa-028f-418e-9c92-b64827b35fed',
+    chat_id: '122559221',
+    first_name: 'Иван',
+    last_name: 'Сидоров',
+    username: 'isidorov',
+    avatar_href: 'http://something/damienmarchand/sqdsdqsdsfds',
+    last_activity: '2018-09-28T10:55:51.603Z',
+    first_activity: '2018-09-28T10:55:51.603Z',
+  },
+];
+
+exports.messages = [
+  {
+    id: 'de13a5fa-028f-418e-9c92-b64827b35fed'
   },
 ];

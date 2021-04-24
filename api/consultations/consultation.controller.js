@@ -1,6 +1,8 @@
 'use strict';
-
-const store = require('../../utils/store.util');
+const {
+  findConsultationById,
+  updateConsultation,
+} = require('../../services/consultation.service');
 
 exports.getOne = ctx => {
   const { consultationId } = ctx.params;
@@ -68,18 +70,4 @@ exports.confirmPayment = ctx => {
 
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS', status: updConsultation.status };
-};
-
-const findConsultationById = consultationId => {
-  return store.consultations.find(
-    consultation => consultation.id === consultationId,
-  );
-};
-
-const updateConsultation = consultation => {
-  let foundIndex = store.consultations.findIndex(
-    item => item.id === consultation.id,
-  );
-  store.consultations[foundIndex] = consultation;
-  return consultation;
 };

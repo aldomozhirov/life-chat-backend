@@ -1,9 +1,15 @@
 'use strict';
 
-const generateId = require('../../utils/generateId.util');
-const store = require('../../utils/store.util');
 const joi = require('joi');
 const userSchema = require('../../schemas/user');
+const {
+  userExistsByEmail,
+  userExistsById,
+  findUserById,
+  createUser,
+  updateUser,
+  findConsultationsByUserId,
+} = require('../../services/user.service');
 const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
 
@@ -12,7 +18,7 @@ exports.createOne = ctx => {
   if (data.error) {
     return ctx.throw(422, data.error);
   }
-  if (store.users.find(user => user.email === data.value.email)) {
+  if (userExistsByEmail(data.value.email)) {
     return ctx.throw(403, 'User with such email already exists');
   }
 
@@ -79,40 +85,10 @@ exports.getMe = ctx => {
 
 exports.getMyConsultations = ctx => {
   const userId = getUserIdByToken(ctx);
-  ctx.assert(userExists(userId), 404, "The requested user doesn't exist");
+  ctx.assert(userExistsById(userId), 404, "The requested user doesn't exist");
   const consultations = findConsultationsByUserId(userId);
   ctx.status = 200;
   ctx.body = consultations;
-};
-
-const createUser = user => {
-  const newUser = {
-    id: generateId(),
-    createdAt: Date.now(),
-    ...user,
-  };
-  store.users.push(newUser);
-  return newUser;
-};
-
-const updateUser = user => {
-  let foundIndex = store.users.findIndex(item => item.id === user.id);
-  store.users[foundIndex] = user;
-  return user;
-};
-
-const findUserById = userId => {
-  return store.users.find(user => user.id === userId);
-};
-
-const findConsultationsByUserId = userId => {
-  return store.consultations.filter(
-    consultation => consultation.user_id === userId,
-  );
-};
-
-const userExists = userId => {
-  return !!findUserById(userId);
 };
 
 const getUserIdByToken = ctx => {
