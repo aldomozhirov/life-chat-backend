@@ -3,6 +3,9 @@ const {
   findConsultationById,
   updateConsultation,
 } = require('../../services/consultation.service');
+const {
+  findMessagesByConsultationId
+} = require('../../services/message.service');
 
 exports.getOne = ctx => {
   const { consultationId } = ctx.params;
@@ -70,4 +73,16 @@ exports.confirmPayment = ctx => {
 
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS', status: updConsultation.status };
+};
+
+exports.getConsultationMessages = ctx => {
+  const { consultationId } = ctx.params;
+  ctx.assert(
+    findConsultationById(consultationId),
+    404,
+    "The requested consultation doesn't exist",
+  );
+  const messages = findMessagesByConsultationId(consultationId);
+  ctx.status = 200;
+  ctx.body = messages;
 };

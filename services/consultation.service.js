@@ -22,6 +22,14 @@ exports.findConsultationById = consultationId => {
   );
 };
 
+exports.findActiveConsultationByPatientId = patientId => {
+  return store.consultations.find(
+    consultation =>
+      consultation.patient_id === patientId &&
+      !['COMPLETED'].includes(consultation.status),
+  );
+};
+
 exports.updateConsultation = consultation => {
   let foundIndex = store.consultations.findIndex(
     item => item.id === consultation.id,

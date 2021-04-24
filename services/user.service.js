@@ -2,7 +2,8 @@
 
 const generateId = require('../utils/generateId.util');
 const store = require('../utils/store.util');
-const { findPatientById } = require('../services/patients.service');
+const { findPatientById } = require('./patient.service');
+const { findMessageById } = require('./message.service');
 const { omit } = require('lodash');
 
 exports.createUser = user => {
@@ -32,6 +33,12 @@ exports.findConsultationsByUserId = userId => {
       return {
         ...omit(consultation, ['patient_id', 'user_id']),
         patient: findPatientById(consultation.patient_id),
+        lastMessage:
+          consultation.last_message_id &&
+          omit(findMessageById(consultation.last_message_id), [
+            'consultation_id',
+            'patient_id',
+          ]),
       };
     });
 };

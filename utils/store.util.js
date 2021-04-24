@@ -15,7 +15,7 @@ exports.users = [
       card_number: '4692065455989192',
     },
     bot: {
-      token: '1756313727:AAE6j_yRhSL1PJPpb04Xo762riQSxzWVz0k',
+      token: '1724130296:AAFsbq73Jjhk6tdxA_LFgt_9TRs1WWlNKjE',
     },
     details: {
       rate: 2000,
@@ -56,5 +56,9 @@ exports.patients = [
 exports.messages = [
   {
     id: 'de13a5fa-028f-418e-9c92-b64827b35fed',
+    consultation_id: '1a42fc9f-267a-4276-a1cc-f99dfc9ba206',
+    patient_id: 'de13a5fa-028f-418e-9c92-b64827b35fed',
+    text: 'Hello!',
+    sent_at: '2018-09-28T10:55:51.603Z',
   },
 ];

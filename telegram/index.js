@@ -4,9 +4,14 @@ const TelegramBot = require('node-telegram-bot-api');
 const {
   findPatientByChatId,
   createPatient,
-} = require('../services/patients.service');
-const { createConsultation } = require('../services/consultation.service');
+} = require('../services/patient.service');
+const {
+  createConsultation,
+  findActiveConsultationByPatientId,
+  updateConsultation,
+} = require('../services/consultation.service');
 const { findUserById } = require('../services/user.service');
+const { saveMessage } = require('../services/message.service');
 
 exports.subscribeUpdates = userId => {
   const user = findUserById(userId);
@@ -28,11 +33,25 @@ exports.subscribeUpdates = userId => {
         first_activity: msg.date,
       });
     }
-    createConsultation({
+    let consultation = findActiveConsultationByPatientId(patient.id);
+    let isNewConsultation = false;
+    if (!consultation) {
+      consultation = createConsultation({
+        patient_id: patient.id,
+        user_id: userId,
+      });
+      isNewConsultation = true;
+    }
+    const message = saveMessage({
+      consultation_id: consultation.id,
       patient_id: patient.id,
-      user_id: userId,
+      text: msg.text,
+      sent_at: msg.date,
     });
-    console.log(msg.text);
-    bot.sendMessage(chatId, welcomeMessage);
+    consultation.last_message_id = message.id;
+    updateConsultation(consultation);
+    if (isNewConsultation) {
+      bot.sendMessage(chatId, welcomeMessage);
+    }
   });
 };
