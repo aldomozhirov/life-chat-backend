@@ -2,6 +2,9 @@
 
 const store = require('../utils/store.util');
 const generateId = require('../utils/generateId.util');
+const { omit } = require('lodash');
+const { findPatientById } = require('./patient.service');
+const { findMessageById } = require('./message.service');
 
 exports.createConsultation = data => {
   const newConsultation = {
@@ -17,9 +20,19 @@ exports.createConsultation = data => {
 };
 
 exports.findConsultationById = consultationId => {
-  return store.consultations.find(
+  const consultation = store.consultations.find(
     consultation => consultation.id === consultationId,
   );
+  return {
+    ...omit(consultation, ['patient_id', 'user_id']),
+    patient: findPatientById(consultation.patient_id),
+    last_message:
+      consultation.last_message_id &&
+      omit(findMessageById(consultation.last_message_id), [
+        'consultation_id',
+        'patient_id',
+      ]),
+  };
 };
 
 exports.findActiveConsultationByPatientId = patientId => {
