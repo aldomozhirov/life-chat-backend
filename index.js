@@ -1,6 +1,6 @@
 'use strict';
 
-const https = require('https');
+const http = require('http');
 const server = require('./server');
 
 const { port } = require('./config').server;
@@ -13,7 +13,7 @@ async function bootstrap() {
    * e.g.
    * await sequelize.authenticate()
    */
-  return https.createServer(server.callback()).listen(port);
+  return http.createServer(server.callback()).listen(port);
 }
 
 bootstrap()
