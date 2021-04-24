@@ -77,6 +77,14 @@ exports.getMe = ctx => {
   ctx.body = user;
 };
 
+exports.getMyConsultations = ctx => {
+  const userId = getUserIdByToken(ctx);
+  ctx.assert(userExists(userId), 404, "The requested user doesn't exist");
+  const consultations = findConsultationsByUserId(userId);
+  ctx.status = 200;
+  ctx.body = consultations;
+};
+
 const createUser = user => {
   const newUser = {
     id: generateId(),
@@ -95,6 +103,16 @@ const updateUser = user => {
 
 const findUserById = userId => {
   return store.users.find(user => user.id === userId);
+};
+
+const findConsultationsByUserId = userId => {
+  return store.consultations.filter(
+    consultation => consultation.user_id === userId,
+  );
+};
+
+const userExists = userId => {
+  return !!findUserById(userId);
 };
 
 const getUserIdByToken = ctx => {

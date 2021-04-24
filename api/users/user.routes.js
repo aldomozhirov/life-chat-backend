@@ -11,11 +11,12 @@ module.exports = Router => {
 
   router
     .post('/', controller.createOne)
-    .put('/payment', controller.updatePayment)
-    .put('/bot', controller.updateBot)
-    .put('/details', controller.updateDetails)
     .post('/authorise', authenticate)
-    .get('/me', jwt, controller.getMe);
+    .put('/payment', jwt, controller.updatePayment)
+    .put('/bot', jwt, controller.updateBot)
+    .put('/details', jwt, controller.updateDetails)
+    .get('/me', jwt, controller.getMe)
+    .get('/me/consultations', jwt, controller.getMyConsultations);
 
   return router;
 };
