@@ -31,7 +31,7 @@ exports.consultations = [
     user_id: 'b2e60dcf-cbbf-413e-9aa0-08fb50a5c675',
     created_at: '2018-09-28T10:55:51.603Z',
     scheduled_on: '2018-09-28T10:55:51.603Z',
-    status: 'COMPLETED',
+    status: 'NEW',
     duration: 52362345722,
     total_cost: 2546.0,
     can_send_message: false,
