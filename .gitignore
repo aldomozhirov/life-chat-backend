@@ -31,4 +31,6 @@ node_modules/
 
 .DS_Store
 
-now.json
+vercel.json
+
+.vercel
