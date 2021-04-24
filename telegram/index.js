@@ -126,9 +126,7 @@ const proposeTerms = (bot, chatId) => {
 
 exports.sendConsultationMessage = async (userId, consultationId, text) => {
   const bot = bots[userId];
-  console.log(consultationId);
   const consultation = findConsultationById(consultationId);
-  console.log(consultation);
   const patient = findPatientById(consultation.patient_id);
   const chatId = patient.chat_id;
   return bot.sendMessage(chatId, text).then(msg => {
