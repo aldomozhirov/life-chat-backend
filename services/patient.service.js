@@ -20,3 +20,9 @@ exports.createPatient = data => {
   store.patients.push(newPatient);
   return newPatient;
 };
+
+exports.updatePatient = patient => {
+  let foundIndex = store.patients.findIndex(item => item.id === patient.id);
+  store.patients[foundIndex] = patient;
+  return patient;
+};

@@ -4,8 +4,9 @@ const {
   updateConsultation,
 } = require('../../services/consultation.service');
 const {
-  findMessagesByConsultationId
+  findMessagesByConsultationId,
 } = require('../../services/message.service');
+const telegram = require('../../telegram');
 
 exports.getOne = ctx => {
   const { consultationId } = ctx.params;
