@@ -11,6 +11,7 @@ const {
   createConsultation,
   findActiveConsultationByPatientId,
   updateConsultation,
+  findConsultationById,
 } = require('../services/consultation.service');
 const { findUserById } = require('../services/user.service');
 const { saveMessage } = require('../services/message.service');
@@ -120,5 +121,22 @@ const proposeTerms = (bot, chatId) => {
           : `Замечательно! До связи в ${term}`,
       );
     }
+  });
+};
+
+exports.sendConsultationMessage = async (userId, consultationId, text) => {
+  const bot = bots[userId];
+  const consultation = findConsultationById(consultationId);
+  const patient = findPatientById(consultation.patient_id);
+  const chatId = patient.chat_id;
+  return bot.sendMessage(chatId, text).then(msg => {
+    const message = saveMessage({
+      consultation_id: consultation.id,
+      text: text,
+      sent_at: msg.date,
+    });
+    consultation.last_message_id = message.id;
+    updateConsultation(consultation);
+    return message;
   });
 };

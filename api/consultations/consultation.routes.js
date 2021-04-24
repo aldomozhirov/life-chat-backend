@@ -11,7 +11,7 @@ module.exports = Router => {
   router
     .get('/:consultationId', controller.getOne)
     .get('/:consultationId/messages', controller.getConsultationMessages)
-    .put('/:consultationId/confirm', controller.confirm)
+    .post('/:consultationId/reply', controller.sendConsultationMessage)
     .put('/:consultationId/start', controller.start)
     .put('/:consultationId/cancel', controller.cancel)
     .put('/:consultationId/complete', controller.complete)
