@@ -19,20 +19,22 @@ exports.createConsultation = data => {
   return newConsultation;
 };
 
-exports.findConsultationById = consultationId => {
+exports.findConsultationById = (consultationId, format = false) => {
   const consultation = store.consultations.find(
     consultation => consultation.id === consultationId,
   );
-  return {
-    ...omit(consultation, ['patient_id', 'user_id']),
-    patient: findPatientById(consultation.patient_id),
-    last_message:
-      consultation.last_message_id &&
-      omit(findMessageById(consultation.last_message_id), [
-        'consultation_id',
-        'patient_id',
-      ]),
-  };
+  return format
+    ? {
+        ...omit(consultation, ['patient_id', 'user_id']),
+        patient: findPatientById(consultation.patient_id),
+        last_message:
+          consultation.last_message_id &&
+          omit(findMessageById(consultation.last_message_id), [
+            'consultation_id',
+            'patient_id',
+          ]),
+      }
+    : consultation;
 };
 
 exports.findActiveConsultationByPatientId = patientId => {

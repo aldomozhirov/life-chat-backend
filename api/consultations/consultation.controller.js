@@ -15,7 +15,7 @@ const { verify } = require('jsonwebtoken');
 
 exports.getOne = ctx => {
   const { consultationId } = ctx.params;
-  const consultation = findConsultationById(consultationId);
+  const consultation = findConsultationById(consultationId, true);
   ctx.assert(consultation, 404, "The requested consultation doesn't exist");
   ctx.status = 200;
   ctx.body = consultation;

@@ -86,7 +86,7 @@ exports.getMe = ctx => {
 exports.getMyConsultations = ctx => {
   const userId = getUserIdByToken(ctx);
   ctx.assert(userExistsById(userId), 404, "The requested user doesn't exist");
-  const consultations = findConsultationsByUserId(userId);
+  const consultations = findConsultationsByUserId(userId, true);
   ctx.status = 200;
   ctx.body = consultations;
 };
