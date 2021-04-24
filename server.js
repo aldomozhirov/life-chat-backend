@@ -4,6 +4,7 @@ const compress = require('koa-compress')();
 const cors = require('@koa/cors')(/* Add your cors option */);
 const helmet = require('koa-helmet')(/* Add your security option */);
 const logger = require('koa-logger')();
+const jwt = require('./middleware/jwt.middleware');
 
 const errorHandler = require('./middleware/error.middleware');
 const applyApiMiddleware = require('./api');
