@@ -13,9 +13,8 @@ module.exports = Router => {
     .get('/:consultationId/messages', controller.getConsultationMessages)
     .post('/:consultationId/reply', controller.sendConsultationMessage)
     .put('/:consultationId/start', controller.start)
-    .put('/:consultationId/cancel', controller.cancel)
+    .put('/:consultationId/prepaid', controller.prepaid)
     .put('/:consultationId/complete', controller.complete)
-    .put('/:consultationId/confirmPayment', controller.confirmPayment)
     .use(jwt);
 
   return router;

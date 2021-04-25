@@ -21,6 +21,18 @@ exports.getOne = ctx => {
   ctx.body = consultation;
 };
 
+exports.prepaid = ctx => {
+  const { consultationId } = ctx.params;
+  let updConsultation = findConsultationById(consultationId);
+  ctx.assert(updConsultation, 404, "The requested consultation doesn't exist");
+
+  updConsultation.status = 'PREPAID';
+  updateConsultation(updConsultation);
+
+  ctx.status = 200;
+  ctx.body = { result: 'SUCCESS', status: updConsultation.status };
+};
+
 exports.start = ctx => {
   const { consultationId } = ctx.params;
   let updConsultation = findConsultationById(consultationId);
@@ -33,37 +45,15 @@ exports.start = ctx => {
   ctx.body = { result: 'SUCCESS', status: updConsultation.status };
 };
 
-exports.cancel = ctx => {
-  const { consultationId } = ctx.params;
-  let updConsultation = findConsultationById(consultationId);
-  ctx.assert(updConsultation, 404, "The requested consultation doesn't exist");
-
-  updConsultation.status = 'CANCELLED';
-  updateConsultation(updConsultation);
-
-  ctx.status = 200;
-  ctx.body = { result: 'SUCCESS', status: updConsultation.status };
-};
-
 exports.complete = ctx => {
-  const { consultationId } = ctx.params;
-  let updConsultation = findConsultationById(consultationId);
-  ctx.assert(updConsultation, 404, "The requested consultation doesn't exist");
-
-  updConsultation.status = 'CONFIRMATION';
-  updateConsultation(updConsultation);
-
-  ctx.status = 200;
-  ctx.body = { result: 'SUCCESS', status: updConsultation.status };
-};
-
-exports.confirmPayment = ctx => {
   const { consultationId } = ctx.params;
   let updConsultation = findConsultationById(consultationId);
   ctx.assert(updConsultation, 404, "The requested consultation doesn't exist");
 
   updConsultation.status = 'WAIT_PAYMENT';
   updateConsultation(updConsultation);
+
+  telegram.requestConsultationPayment(consultationId);
 
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS', status: updConsultation.status };
