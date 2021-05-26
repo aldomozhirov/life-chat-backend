@@ -3,9 +3,9 @@ const store = require('../utils/store.util');
 const constants = require('../constants');
 
 module.exports = function(ctx) {
-  const { email, password } = ctx.request.body;
+  const { username, password } = ctx.request.body;
 
-  const user = store.users.find(user => user.email === email);
+  const user = store.users.find(user => user.email === username);
   if (!!user && password === 'password') {
     ctx.status = 200;
     ctx.body = {

@@ -27,7 +27,7 @@ const config = {
   isTest: envVars.NODE_ENV === 'test',
   isDevelopment: envVars.NODE_ENV === 'development',
   server: {
-    port: envVars.PORT || 3000,
+    port: envVars.PORT || 8000,
     apiVersion: envVars.API_VERSION || 'v1',
   },
 };
