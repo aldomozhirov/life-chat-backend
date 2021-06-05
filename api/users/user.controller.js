@@ -13,16 +13,16 @@ const {
 const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
 
-exports.createOne = ctx => {
+exports.createOne = async ctx => {
   const data = joi.validate(ctx.request.body, userSchema.user);
   if (data.error) {
     return ctx.throw(422, data.error);
   }
-  if (userExistsByEmail(data.value.email)) {
+  if (await userExistsByEmail(data.value.email)) {
     return ctx.throw(403, 'User with such email already exists');
   }
 
-  const newUser = createUser(data.value);
+  const newUser = await createUser(data.value);
 
   ctx.status = 201;
   ctx.body = newUser;
@@ -76,8 +76,8 @@ exports.updateDetails = ctx => {
   ctx.body = { result: 'SUCCESS' };
 };
 
-exports.getMe = ctx => {
-  const user = findUserById(getUserIdByToken(ctx));
+exports.getMe = async ctx => {
+  const user = await findUserById(getUserIdByToken(ctx));
   ctx.assert(user, 404, "The requested user doesn't exist");
   ctx.status = 200;
   ctx.body = user;

@@ -2,6 +2,7 @@
 
 const http = require('http');
 const server = require('./server');
+const initDb = require('./database');
 
 const { port } = require('./config').server;
 
@@ -13,13 +14,14 @@ async function bootstrap() {
    * e.g.
    * await sequelize.authenticate()
    */
+  await initDb();
   return http.createServer(server.callback()).listen(port);
 }
 
 bootstrap()
   .then(server => {
     console.log(`🚀 Server listening on port ${server.address().port}!`);
-    telegram.subscribeUpdates('b2e60dcf-cbbf-413e-9aa0-08fb50a5c675');
+    // telegram.subscribeUpdates('b2e60dcf-cbbf-413e-9aa0-08fb50a5c675');
   })
   .catch(err => {
     setImmediate(() => {

@@ -1,18 +1,14 @@
 'use strict';
 
-const generateId = require('../utils/generateId.util');
 const store = require('../utils/store.util');
 const { findPatientById } = require('./patient.service');
 const { findMessageById } = require('./message.service');
+const User = require('../model/user');
 const { omit } = require('lodash');
 
-exports.createUser = user => {
-  const newUser = {
-    id: generateId(),
-    createdAt: Date.now(),
-    ...user,
-  };
-  store.users.push(newUser);
+exports.createUser = async user => {
+  const newUser = new User(user);
+  await newUser.save();
   return newUser;
 };
 
@@ -22,8 +18,9 @@ exports.updateUser = user => {
   return user;
 };
 
-exports.findUserById = userId => {
-  return store.users.find(user => user.id === userId);
+exports.findUserById = async userId => {
+  const user = await User.findById(userId);
+  return user;
 };
 
 exports.findConsultationsByUserId = (userId, format = false) => {
@@ -49,6 +46,7 @@ exports.userExistsById = userId => {
   return !!store.users.find(user => user.id === userId);
 };
 
-exports.userExistsByEmail = email => {
-  return !!store.users.find(user => user.email === email);
+exports.userExistsByEmail = async email => {
+  const user = await User.findOne({ email });
+  return !!user;
 };
