@@ -12,7 +12,7 @@ module.exports = Router => {
   router
     .post('/', controller.createOne)
     .post('/authorise', authenticate)
-    .put('/payment', jwt, controller.updatePayment)
+    .put('/payment', jwt, controller.updateBilling)
     .put('/bot', jwt, controller.updateBot)
     .put('/details', jwt, controller.updateDetails)
     .get('/me', jwt, controller.getMe)

@@ -7,7 +7,9 @@ const {
   userExistsById,
   findUserById,
   createUser,
-  updateUser,
+  updateUserBilling,
+  updateUserBot,
+  updateUserDetails,
   findConsultationsByUserId,
 } = require('../../services/user.service');
 const constants = require('../../constants');
@@ -21,57 +23,37 @@ exports.createOne = async ctx => {
   if (await userExistsByEmail(data.value.email)) {
     return ctx.throw(403, 'User with such email already exists');
   }
-
   const newUser = await createUser(data.value);
-
   ctx.status = 201;
   ctx.body = newUser;
 };
 
-exports.updatePayment = ctx => {
+exports.updateBilling = async ctx => {
   const data = joi.validate(ctx.request.body, userSchema.payment);
   if (data.error) {
     return ctx.throw(422, data.error);
   }
-
-  let updatedUser = findUserById(getUserIdByToken(ctx));
-  ctx.assert(updatedUser, 404, "The requested user doesn't exist");
-
-  updatedUser.payment = data.value;
-  updateUser(updatedUser);
-
+  await updateUserBilling(getUserIdByToken(ctx), data.value);
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS' };
 };
 
-exports.updateBot = ctx => {
+exports.updateBot = async ctx => {
   const data = joi.validate(ctx.request.body, userSchema.bot);
   if (data.error) {
     return ctx.throw(422, data.error);
   }
-
-  let updatedUser = findUserById(getUserIdByToken(ctx));
-  ctx.assert(updatedUser, 404, "The requested user doesn't exist");
-
-  updatedUser.bot = data.value;
-  updateUser(updatedUser);
-
+  await updateUserBot(getUserIdByToken(ctx), data.value);
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS' };
 };
 
-exports.updateDetails = ctx => {
+exports.updateDetails = async ctx => {
   const data = joi.validate(ctx.request.body, userSchema.details);
   if (data.error) {
     return ctx.throw(422, data.error);
   }
-
-  let updatedUser = findUserById(getUserIdByToken(ctx));
-  ctx.assert(updatedUser, 404, "The requested user doesn't exist");
-
-  updatedUser.details = data.value;
-  updateUser(updatedUser);
-
+  await updateUserDetails(getUserIdByToken(ctx), data.value);
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS' };
 };

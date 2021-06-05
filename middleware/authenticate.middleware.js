@@ -6,7 +6,6 @@ module.exports = async function(ctx) {
   const { username, password } = ctx.request.body;
 
   const user = await User.findOne({ email: username });
-  console.log(user);
   if (!!user && password === 'password') {
     ctx.status = 200;
     ctx.body = {

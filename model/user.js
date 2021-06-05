@@ -11,6 +11,11 @@ const UserSchema = new Schema({
   inn: String,
   phone: String,
   nationality: String,
+  rate: String,
+  experience: Number,
+  welcome_message: String,
+  billing: { type: mongoose.Schema.Types.ObjectId, ref: 'Billing' },
+  bot: { type: mongoose.Schema.Types.ObjectId, ref: 'Bot' },
 });
 
 module.exports = mongoose.model('User', UserSchema);
