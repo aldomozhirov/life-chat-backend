@@ -7,6 +7,7 @@ const PatientSchema = new Schema({
   first_name: String,
   last_name: String,
   username: String,
+  chat_id: String,
   avatar_href: String,
   last_activity: Date,
   first_activity: Date,

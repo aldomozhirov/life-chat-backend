@@ -1,23 +1,21 @@
 'use strict';
 
-const store = require('../utils/store.util');
-const generateId = require('../utils/generateId.util');
+const Message = require('../model/message');
 
-exports.saveMessage = data => {
-  const newMessage = {
-    id: generateId(),
-    ...data,
-  };
-  store.messages.push(newMessage);
+exports.saveMessage = async payload => {
+  const newMessage = new Message(payload);
+  await newMessage.save();
   return newMessage;
 };
 
 exports.findMessageById = messageId => {
-  return store.messages.find(message => message.id === messageId);
+  return Message.findById(messageId)
+    .populate('consultation')
+    .populate('patient');
 };
 
 exports.findMessagesByConsultationId = consultationId => {
-  return store.messages.filter(
-    message => message.consultation_id === consultationId,
-  );
+  return Message.find({ consultation: consultationId })
+    .populate('consultation')
+    .populate('patient');
 };

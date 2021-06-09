@@ -1,28 +1,21 @@
 'use strict';
 
-const store = require('../utils/store.util');
-const generateId = require('../utils/generateId.util');
+const Patient = require('../model/patient');
 
 exports.findPatientById = patientId => {
-  return store.patients.find(patient => patient.id === patientId);
+  return Patient.findById(patientId);
 };
 
 exports.findPatientByChatId = chatId => {
-  return store.patients.find(patient => patient.chat_id === chatId);
+  return Patient.findOne({ chat_id: chatId });
 };
 
-exports.createPatient = data => {
-  const newPatient = {
-    id: generateId(),
-    createdAt: Date.now(),
-    ...data,
-  };
-  store.patients.push(newPatient);
+exports.createPatient = async payload => {
+  const newPatient = new Patient(payload);
+  await newPatient.save();
   return newPatient;
 };
 
-exports.updatePatient = patient => {
-  let foundIndex = store.patients.findIndex(item => item.id === patient.id);
-  store.patients[foundIndex] = patient;
-  return patient;
+exports.updatePatient = (patientId, payload) => {
+  return Patient.findByIdAndUpdate(patientId, payload);
 };

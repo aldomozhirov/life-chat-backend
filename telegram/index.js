@@ -20,17 +20,17 @@ const { saveMessage } = require('../services/message.service');
 
 let bots = {};
 
-exports.subscribeUpdates = userId => {
-  const user = findUserById(userId);
+exports.subscribeUpdates = async userId => {
+  const user = await findUserById(userId);
   const token = user.bot.token;
-  const welcomeMessage = user.details.welcome_message;
+  const welcomeMessage = user.welcome_message;
   const bot = new TelegramBot(token, { polling: true });
 
-  bot.on('message', msg => {
+  bot.on('message', async msg => {
     const chatId = msg.chat.id;
-    let patient = findPatientByChatId(chatId);
+    let patient = await findPatientByChatId(chatId);
     if (!patient) {
-      patient = createPatient({
+      patient = await createPatient({
         chat_id: chatId,
         first_name: msg.chat.first_name,
         last_name: msg.chat.last_name,
@@ -40,27 +40,25 @@ exports.subscribeUpdates = userId => {
         first_activity: msg.date,
       });
     }
-    let consultation = findActiveConsultationByPatientId(patient.id);
+    let consultation = await findActiveConsultationByPatientId(patient._id);
     let isNewConsultation = false;
     if (!consultation) {
-      consultation = createConsultation({
-        patient_id: patient.id,
-        user_id: userId,
+      consultation = await createConsultation({
+        patient: patient._id,
+        user: userId,
       });
       isNewConsultation = true;
     }
     if (msg.text !== '/start') {
-      const message = saveMessage({
-        consultation_id: consultation.id,
-        patient_id: patient.id,
+      const message = await saveMessage({
+        consultation: consultation._id,
+        patient: patient._id,
         text: msg.text,
         sent_at: msg.date,
       });
-      consultation.last_message_id = message.id;
-      updateConsultation(consultation);
+      await updateConsultation(consultation._id, { last_message: message._id });
     }
-    patient.last_activity = msg.date;
-    updatePatient(patient);
+    await updatePatient(patient._id, { last_activity: msg.date });
     if (isNewConsultation) {
       bot.sendMessage(chatId, welcomeMessage, {
         reply_markup: {
@@ -87,7 +85,7 @@ exports.subscribeUpdates = userId => {
   bots[userId] = bot;
 };
 
-const proposeTerms = (bot, chatId, consultationId) => {
+const proposeTerms = (bot, chatId) => {
   const currentDate = new Date();
   let currentHour = currentDate.getHours();
   let hours = [];
@@ -116,12 +114,12 @@ const proposeTerms = (bot, chatId, consultationId) => {
       const chatId = callback.message.chat.id;
       const option = parseInt(callback.data.split('-')[1]);
       const term = option === 0 ? 'ближайшее время' : terms[option];
-      await requestPayment(
+      /*await requestPayment(
         bot,
         chatId,
         `Договорились, напишу вам в ${term}. До начала консультации вам нужно внести предоплату 1000 рублей, нажав на кнопку ниже. Обращаю ваше внимание, что в случае отмены консультации позднее, чем за час до назначенного времени, предоплата не возвращается.`,
         1000,
-      );
+      );*/
       bot.sendMessage(
         chatId,
         'А пока мы ждем консультацию, расскажите, что вас тревожит или о чем вы хотели бы со мной пообщаться?',
@@ -189,25 +187,24 @@ const requestPayment = async (bot, chatId, message, amount) => {
 
 exports.sendConsultationMessage = async (userId, consultationId, text) => {
   const bot = bots[userId];
-  const consultation = findConsultationById(consultationId);
-  const patient = findPatientById(consultation.patient_id);
+  const consultation = await findConsultationById(consultationId);
+  const patient = await findPatientById(consultation.patient._id);
   const chatId = patient.chat_id;
-  return bot.sendMessage(chatId, text).then(msg => {
-    const message = saveMessage({
-      consultation_id: consultation.id,
+  return bot.sendMessage(chatId, text).then(async msg => {
+    const message = await saveMessage({
+      consultation: consultationId,
       text: text,
       sent_at: msg.date,
     });
-    consultation.last_message_id = message.id;
-    updateConsultation(consultation);
+    await updateConsultation(consultationId, { last_message: message._id });
     return message;
   });
 };
 
 exports.requestConsultationPayment = async (userId, consultationId) => {
   const bot = bots[userId];
-  const consultation = findConsultationById(consultationId);
-  const patient = findPatientById(consultation.patient_id);
+  const consultation = await findConsultationById(consultationId);
+  const patient = await findPatientById(consultation.patient._id);
   const chatId = patient.chat_id;
   return requestPayment(
     bot,

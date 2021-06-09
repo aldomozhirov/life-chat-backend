@@ -1,54 +1,44 @@
 'use strict';
 
-const store = require('../utils/store.util');
-const generateId = require('../utils/generateId.util');
-const { omit } = require('lodash');
-const { findPatientById } = require('./patient.service');
-const { findMessageById } = require('./message.service');
+const Consultation = require('../model/consultation');
 
-exports.createConsultation = data => {
-  const newConsultation = {
-    id: generateId(),
-    user_id: data.user_id,
-    created_at: Date.now(),
+exports.createConsultation = async payload => {
+  const newConsultation = new Consultation({
+    ...payload,
     status: 'NEW',
     can_send_message: false,
-    patient_id: data.patient_id,
-  };
-  store.consultations.push(newConsultation);
+  });
+  await newConsultation.save();
   return newConsultation;
 };
 
 exports.findConsultationById = (consultationId, format = false) => {
-  const consultation = store.consultations.find(
-    consultation => consultation.id === consultationId,
-  );
-  return format
-    ? {
-        ...omit(consultation, ['patient_id', 'user_id']),
-        patient: findPatientById(consultation.patient_id),
-        last_message:
-          consultation.last_message_id &&
-          omit(findMessageById(consultation.last_message_id), [
-            'consultation_id',
-            'patient_id',
-          ]),
-      }
-    : consultation;
+  return Consultation.findById(consultationId)
+    .populate('user')
+    .populate('patient')
+    .populate('last_message');
+};
+
+exports.findConsultationsByUserId = userId => {
+  return Consultation.findOne({ user: userId })
+    .populate('user')
+    .populate('patient')
+    .populate('last_message');
 };
 
 exports.findActiveConsultationByPatientId = patientId => {
-  return store.consultations.find(
-    consultation =>
-      consultation.patient_id === patientId &&
-      !['COMPLETED'].includes(consultation.status),
-  );
+  return Consultation.findOne({
+    patient: patientId,
+    status: { $ne: 'COMPLETED' },
+  })
+    .populate('user')
+    .populate('patient')
+    .populate('last_message');
 };
 
-exports.updateConsultation = consultation => {
-  let foundIndex = store.consultations.findIndex(
-    item => item.id === consultation.id,
-  );
-  store.consultations[foundIndex] = consultation;
-  return consultation;
+exports.updateConsultation = (consultationId, payload) => {
+  return Consultation.findByIdAndUpdate(consultationId, payload)
+    .populate('user')
+    .populate('patient')
+    .populate('last_message');
 };

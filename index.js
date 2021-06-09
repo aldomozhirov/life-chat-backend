@@ -19,9 +19,9 @@ async function bootstrap() {
 }
 
 bootstrap()
-  .then(server => {
+  .then(async server => {
     console.log(`🚀 Server listening on port ${server.address().port}!`);
-    // telegram.subscribeUpdates('b2e60dcf-cbbf-413e-9aa0-08fb50a5c675');
+    await telegram.subscribeUpdates('60bba22378bb6e74fd304c16');
   })
   .catch(err => {
     setImmediate(() => {

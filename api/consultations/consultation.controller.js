@@ -13,60 +13,53 @@ const messageSchema = require('../../schemas/message');
 const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
 
-exports.getOne = ctx => {
+exports.getOne = async ctx => {
   const { consultationId } = ctx.params;
-  const consultation = findConsultationById(consultationId, true);
+  const consultation = await findConsultationById(consultationId, true);
   ctx.assert(consultation, 404, "The requested consultation doesn't exist");
   ctx.status = 200;
   ctx.body = consultation;
 };
 
-exports.prepaid = ctx => {
+exports.prepaid = async ctx => {
   const { consultationId } = ctx.params;
-  let updConsultation = findConsultationById(consultationId);
+  const updConsultation = await updateConsultation(consultationId, {
+    status: 'PREPAID',
+  });
   ctx.assert(updConsultation, 404, "The requested consultation doesn't exist");
-
-  updConsultation.status = 'PREPAID';
-  updateConsultation(updConsultation);
-
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS', status: updConsultation.status };
 };
 
-exports.start = ctx => {
+exports.start = async ctx => {
   const { consultationId } = ctx.params;
-  let updConsultation = findConsultationById(consultationId);
+  const updConsultation = await updateConsultation(consultationId, {
+    status: 'PENDING',
+  });
   ctx.assert(updConsultation, 404, "The requested consultation doesn't exist");
-
-  updConsultation.status = 'PENDING';
-  updateConsultation(updConsultation);
-
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS', status: updConsultation.status };
 };
 
-exports.complete = ctx => {
+exports.complete = async ctx => {
   const { consultationId } = ctx.params;
-  let updConsultation = findConsultationById(consultationId);
+  const updConsultation = await updateConsultation(consultationId, {
+    status: 'WAIT_PAYMENT',
+  });
   ctx.assert(updConsultation, 404, "The requested consultation doesn't exist");
-
-  updConsultation.status = 'WAIT_PAYMENT';
-  updateConsultation(updConsultation);
-
-  telegram.requestConsultationPayment(consultationId);
-
+  await telegram.requestConsultationPayment(consultationId);
   ctx.status = 200;
   ctx.body = { result: 'SUCCESS', status: updConsultation.status };
 };
 
-exports.getConsultationMessages = ctx => {
+exports.getConsultationMessages = async ctx => {
   const { consultationId } = ctx.params;
   ctx.assert(
-    findConsultationById(consultationId),
+    await findConsultationById(consultationId),
     404,
     "The requested consultation doesn't exist",
   );
-  const messages = findMessagesByConsultationId(consultationId);
+  const messages = await findMessagesByConsultationId(consultationId);
   ctx.status = 200;
   ctx.body = messages;
 };
@@ -74,7 +67,7 @@ exports.getConsultationMessages = ctx => {
 exports.sendConsultationMessage = async ctx => {
   const { consultationId } = ctx.params;
   ctx.assert(
-    findConsultationById(consultationId),
+    await findConsultationById(consultationId),
     404,
     "The requested consultation doesn't exist",
   );
@@ -89,7 +82,6 @@ exports.sendConsultationMessage = async ctx => {
     consultationId,
     text,
   );
-
   ctx.status = 200;
   ctx.body = { ...message };
 };

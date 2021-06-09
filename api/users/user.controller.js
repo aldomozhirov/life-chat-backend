@@ -4,14 +4,15 @@ const joi = require('joi');
 const userSchema = require('../../schemas/user');
 const {
   userExistsByEmail,
-  userExistsById,
   findUserById,
   createUser,
   updateUserBilling,
   updateUserBot,
   updateUserDetails,
-  findConsultationsByUserId,
 } = require('../../services/user.service');
+const {
+  findConsultationsByUserId,
+} = require('../../services/consultation.service');
 const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
 
@@ -65,10 +66,9 @@ exports.getMe = async ctx => {
   ctx.body = user;
 };
 
-exports.getMyConsultations = ctx => {
+exports.getMyConsultations = async ctx => {
   const userId = getUserIdByToken(ctx);
-  ctx.assert(userExistsById(userId), 404, "The requested user doesn't exist");
-  const consultations = findConsultationsByUserId(userId, true);
+  const consultations = await findConsultationsByUserId(userId, true);
   ctx.status = 200;
   ctx.body = consultations;
 };
