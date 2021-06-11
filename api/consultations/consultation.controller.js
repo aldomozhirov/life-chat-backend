@@ -12,13 +12,18 @@ const telegram = require('../../telegram');
 const messageSchema = require('../../schemas/message');
 const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
+const { format: formatConsultation } = require('../../formatters/consultation');
+const {
+  format: formatMessage,
+  formatArray: formatMessages,
+} = require('../../formatters/message');
 
 exports.getOne = async ctx => {
   const { consultationId } = ctx.params;
   const consultation = await findConsultationById(consultationId, true);
   ctx.assert(consultation, 404, "The requested consultation doesn't exist");
   ctx.status = 200;
-  ctx.body = consultation;
+  ctx.body = formatConsultation(consultation);
 };
 
 exports.prepaid = async ctx => {
@@ -61,7 +66,7 @@ exports.getConsultationMessages = async ctx => {
   );
   const messages = await findMessagesByConsultationId(consultationId);
   ctx.status = 200;
-  ctx.body = messages;
+  ctx.body = formatMessages(messages);
 };
 
 exports.sendConsultationMessage = async ctx => {
@@ -83,7 +88,7 @@ exports.sendConsultationMessage = async ctx => {
     text,
   );
   ctx.status = 200;
-  ctx.body = { ...message };
+  ctx.body = formatMessage(message);
 };
 
 const getUserIdByToken = ctx => {

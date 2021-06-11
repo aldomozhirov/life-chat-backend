@@ -20,10 +20,15 @@ exports.findConsultationById = (consultationId, format = false) => {
 };
 
 exports.findConsultationsByUserId = userId => {
-  return Consultation.findOne({ user: userId })
-    .populate('user')
+  return Consultation.find({ user: userId })
     .populate('patient')
-    .populate('last_message');
+    .populate({
+      path: 'last_message',
+      populate: {
+        path: 'patient',
+        model: 'Patient',
+      },
+    });
 };
 
 exports.findActiveConsultationByPatientId = patientId => {

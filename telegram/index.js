@@ -37,7 +37,7 @@ exports.subscribeUpdates = async userId => {
         username: msg.chat.username,
         avatar_href:
           'https://cdn.iconscout.com/icon/free/png-256/avatar-373-456325.png',
-        first_activity: msg.date,
+        first_activity: new Date(msg.date * 1000),
       });
     }
     let consultation = await findActiveConsultationByPatientId(patient._id);
@@ -54,11 +54,13 @@ exports.subscribeUpdates = async userId => {
         consultation: consultation._id,
         patient: patient._id,
         text: msg.text,
-        sent_at: msg.date,
+        sent_at: new Date(msg.date * 1000),
       });
       await updateConsultation(consultation._id, { last_message: message._id });
     }
-    await updatePatient(patient._id, { last_activity: msg.date });
+    await updatePatient(patient._id, {
+      last_activity: new Date(msg.date * 1000),
+    });
     if (isNewConsultation) {
       bot.sendMessage(chatId, welcomeMessage, {
         reply_markup: {
@@ -113,8 +115,8 @@ const proposeTerms = (bot, chatId) => {
     if (callback.data.includes('term')) {
       const chatId = callback.message.chat.id;
       const option = parseInt(callback.data.split('-')[1]);
-      const term = option === 0 ? 'ближайшее время' : terms[option];
-      /*await requestPayment(
+      /*const term = option === 0 ? 'ближайшее время' : terms[option];
+      await requestPayment(
         bot,
         chatId,
         `Договорились, напишу вам в ${term}. До начала консультации вам нужно внести предоплату 1000 рублей, нажав на кнопку ниже. Обращаю ваше внимание, что в случае отмены консультации позднее, чем за час до назначенного времени, предоплата не возвращается.`,
@@ -194,7 +196,7 @@ exports.sendConsultationMessage = async (userId, consultationId, text) => {
     const message = await saveMessage({
       consultation: consultationId,
       text: text,
-      sent_at: msg.date,
+      sent_at: new Date(msg.date * 1000),
     });
     await updateConsultation(consultationId, { last_message: message._id });
     return message;

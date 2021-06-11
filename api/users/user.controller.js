@@ -15,6 +15,10 @@ const {
 } = require('../../services/consultation.service');
 const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
+const { format: formatUser } = require('../../formatters/user');
+const {
+  formatArray: formatConsultations,
+} = require('../../formatters/consultation');
 
 exports.createOne = async ctx => {
   const data = joi.validate(ctx.request.body, userSchema.user);
@@ -26,7 +30,7 @@ exports.createOne = async ctx => {
   }
   const newUser = await createUser(data.value);
   ctx.status = 201;
-  ctx.body = newUser;
+  ctx.body = formatUser(newUser);
 };
 
 exports.updateBilling = async ctx => {
@@ -63,14 +67,14 @@ exports.getMe = async ctx => {
   const user = await findUserById(getUserIdByToken(ctx));
   ctx.assert(user, 404, "The requested user doesn't exist");
   ctx.status = 200;
-  ctx.body = user;
+  ctx.body = formatUser(user);
 };
 
 exports.getMyConsultations = async ctx => {
   const userId = getUserIdByToken(ctx);
   const consultations = await findConsultationsByUserId(userId, true);
   ctx.status = 200;
-  ctx.body = consultations;
+  ctx.body = formatConsultations(consultations);
 };
 
 const getUserIdByToken = ctx => {
