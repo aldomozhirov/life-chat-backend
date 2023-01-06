@@ -10,14 +10,22 @@ Backend application for Life Chat - platform helping psychologists to work with 
 - Telegram Bot API
 
 ## How to run app
-1. Install npm dependencies:
-```shell
-npm install
-```
+1. Set environment variables or use `.env` file. Example:
+    ```
+    DB_URI=mongodb://127.0.0.1:27017/lifechatdb
+    JWT_SECRET=84573695730af7da3ab1bb716f745df7
+    NODE_ENV=production
+    PORT=8000
+    API_VERSION=1
+   ```
+2. Install npm dependencies:
+    ```shell
+    npm install
+    ```
 2. Run the app:
-```shell
-npm start
-```
+    ```shell
+    npm start
+    ```
 
 ## Related repositories
 [life-chat-ui](https://github.com/aldomozhirov/life-chat-ui)
@@ -70,7 +78,7 @@ Authenticates a user based on credentials
 ##### Response
 ```json lines
 {
-  "auth_token": string
+  "auth_token": string // JWT token
 }
 ```
 
@@ -79,7 +87,7 @@ Updates user's Telegram bot configuration parameters
 ##### Payload
 ```json lines
 {
-  "token": string
+  "token": string // User's Telegram bot token
 }
 ```
 ##### Response
@@ -94,9 +102,9 @@ Updates user details
 ##### Payload
 ```json lines
 {
-  "rate": number,
-  "experience": number,
-  "welcome_message": string
+  "rate": number, // Hourly pay rate in local currency
+  "experience": number, // Years of experience
+  "welcome_message": string // First consultation message content to be sent to patients
 }
 ```
 ##### Response
@@ -111,7 +119,7 @@ Updates user payment parameters
 ##### Payload
 ```json lines
 {
-  "card_number": string
+  "card_number": string // User's bank card number, to which payments will be sent from patients
 }
 ```
 ##### Response
@@ -178,6 +186,7 @@ Fetch messages by consultation ID
 ##### Response
 ```json lines
 {
+  "id": string,
   "text": string,
   "sent_at": string,
   "patient": Patient
@@ -189,57 +198,45 @@ Sends message to the open consultation Telegram chat
 ##### Payload
 ```json lines
 {
-  TBD
+  "text": string
 }
 ```
 ##### Response
 ```json lines
 {
-  TBD
+  "id": string,
+  "text": string,
+  "sent_at": string,
+  "patient": Patient
 }
 ```
 
 #### PUT /consultations/:consultationId/start
 Launches the consultation flow. Changes status of consultation from `NEW` to `PENDING`.
-##### Payload
-```json lines
-{
-  TBD
-}
-```
 ##### Response
 ```json lines
 {
-  TBD
+  "result": "SUCCESS",
+  "status": "PENDING"
 }
 ```
 
 #### PUT /consultations/:consultationId/prepaid
 Marks consultation as prepaid. Changes status of consultation from `PENDING` to `PREPAID`.
-##### Payload
-```json lines
-{
-  TBD
-}
-```
 ##### Response
 ```json lines
 {
-  TBD
+  "result": "SUCCESS",
+  "status": "PREPAID"
 }
 ```
 
 #### PUT /consultations/:consultationId/complete
 Completes the consultation. Changes consultation status to `WAIT_PAYMENT`.
-##### Payload
-```json lines
-{
-  TBD
-}
-```
 ##### Response
 ```json lines
 {
-  TBD
+  "result": "SUCCESS",
+  "status": "WAIT_PAYMENT"
 }
 ```

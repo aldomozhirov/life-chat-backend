@@ -13,12 +13,12 @@ const {
 const {
   findConsultationsByUserId,
 } = require('../../services/consultation.service');
-const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
 const { format: formatUser } = require('../../formatters/user');
 const {
   formatArray: formatConsultations,
 } = require('../../formatters/consultation');
+const { jwtSecret } = require('../../config').server;
 
 exports.createOne = async ctx => {
   const data = joi.validate(ctx.request.body, userSchema.user);
@@ -79,6 +79,6 @@ exports.getMyConsultations = async ctx => {
 
 const getUserIdByToken = ctx => {
   const token = ctx.request.header.authorization.split(' ')[1];
-  const decoded = verify(token, constants.JWT_SECRET);
+  const decoded = verify(token, jwtSecret);
   return decoded.user_id;
 };

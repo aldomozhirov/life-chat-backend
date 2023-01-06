@@ -7,14 +7,15 @@ const joi = require('joi');
  */
 const envSchema = joi
   .object({
-    DB_USER: joi.string(),
-    DB_HOST: joi.string(),
+    DB_USER: joi
+      .string()
+      .optional()
+      .empty(''),
     DB_PASSWORD: joi
       .string()
       .optional()
       .empty(''),
-    DB_DATABASE: joi.string(),
-    DB_PORT: joi.number(),
+    DB_URI: joi.string(),
   })
   .unknown()
   .required();
@@ -28,12 +29,10 @@ if (error) {
 }
 
 const config = {
-  databaseConfig: {
+  database: {
     user: envVars.DB_USER,
-    host: envVars.DB_HOST,
     password: envVars.DB_PASSWORD,
-    database: envVars.DB_DATABASE,
-    port: envVars.DB_PORT,
+    uri: envVars.DB_URI,
   },
 };
 

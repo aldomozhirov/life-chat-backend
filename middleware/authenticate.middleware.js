@@ -1,6 +1,6 @@
 const { sign } = require('jsonwebtoken');
-const constants = require('../constants');
 const User = require('../model/user');
+const { jwtSecret } = require('../config').server;
 
 module.exports = async function(ctx) {
   const { username, password } = ctx.request.body;
@@ -9,7 +9,7 @@ module.exports = async function(ctx) {
   if (!!user && password === 'password') {
     ctx.status = 200;
     ctx.body = {
-      auth_token: sign({ user_id: user._id }, constants.JWT_SECRET, {
+      auth_token: sign({ user_id: user._id }, jwtSecret, {
         expiresIn: '48h',
       }),
     };

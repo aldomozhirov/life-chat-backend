@@ -10,6 +10,7 @@ const envSchema = joi
     NODE_ENV: joi.string().allow(['development', 'production', 'test']),
     PORT: joi.number(),
     API_VERSION: joi.number(),
+    JWT_SECRET: joi.string(),
   })
   .unknown()
   .required();
@@ -26,6 +27,7 @@ const config = {
   env: envVars.NODE_ENV,
   isTest: envVars.NODE_ENV === 'test',
   isDevelopment: envVars.NODE_ENV === 'development',
+  jwtSecret: envVars.JWT_SECRET,
   server: {
     port: envVars.PORT || 8000,
     apiVersion: envVars.API_VERSION || 'v1',

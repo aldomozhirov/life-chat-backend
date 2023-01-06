@@ -1,6 +1,6 @@
 const koaJwt = require('koa-jwt');
-const constants = require('../constants');
+const { jwtSecret: secret } = require('../config').server;
 
 module.exports = koaJwt({
-  secret: constants.JWT_SECRET, // Should not be hardcoded
+  secret,
 });

@@ -10,13 +10,13 @@ const {
 } = require('../../services/message.service');
 const telegram = require('../../telegram');
 const messageSchema = require('../../schemas/message');
-const constants = require('../../constants');
 const { verify } = require('jsonwebtoken');
 const { format: formatConsultation } = require('../../formatters/consultation');
 const {
   format: formatMessage,
   formatArray: formatMessages,
 } = require('../../formatters/message');
+const { jwtSecret } = require('../../config').server;
 
 exports.getOne = async ctx => {
   const { consultationId } = ctx.params;
@@ -93,6 +93,6 @@ exports.sendConsultationMessage = async ctx => {
 
 const getUserIdByToken = ctx => {
   const token = ctx.request.header.authorization.split(' ')[1];
-  const decoded = verify(token, constants.JWT_SECRET);
+  const decoded = verify(token, jwtSecret);
   return decoded.user_id;
 };

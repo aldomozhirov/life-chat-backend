@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const { uri } = require('./config').database;
 
-const initDB = () => {
-  mongoose.connect('mongodb://localhost:27017/lifechatdb', {
+const initDB = async () => {
+  await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
