@@ -16,7 +16,7 @@ const {
   format: formatMessage,
   formatArray: formatMessages,
 } = require('../../formatters/message');
-const { jwtSecret } = require('../../config').server;
+const { jwtSecret } = require('../../config');
 
 exports.getOne = async ctx => {
   const { consultationId } = ctx.params;

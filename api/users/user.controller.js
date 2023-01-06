@@ -18,7 +18,7 @@ const { format: formatUser } = require('../../formatters/user');
 const {
   formatArray: formatConsultations,
 } = require('../../formatters/consultation');
-const { jwtSecret } = require('../../config').server;
+const { jwtSecret } = require('../../config');
 
 exports.createOne = async ctx => {
   const data = joi.validate(ctx.request.body, userSchema.user);

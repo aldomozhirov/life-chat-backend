@@ -1,10 +1,9 @@
 const { sign } = require('jsonwebtoken');
 const User = require('../model/user');
-const { jwtSecret } = require('../config').server;
+const { jwtSecret } = require('../config');
 
 module.exports = async function(ctx) {
   const { username, password } = ctx.request.body;
-
   const user = await User.findOne({ email: username });
   if (!!user && password === 'password') {
     ctx.status = 200;
