@@ -37,7 +37,7 @@ Backend application for Life Chat - platform helping psychologists to work with 
 #### POST /users
 Creates a new user
 ##### Payload
-```json lines
+```javascript
 {
   "first_name": string,
   "last_name": string,
@@ -49,7 +49,7 @@ Creates a new user
 }
 ```
 ##### Response
-```json lines
+```javascript
 {
   "id": string,
   "created_at": string,
@@ -76,7 +76,7 @@ Authenticates a user based on credentials
 }
 ```
 ##### Response
-```json lines
+```javascript
 {
   "auth_token": string // JWT token
 }
@@ -85,13 +85,13 @@ Authenticates a user based on credentials
 #### PUT /users/bot
 Updates user's Telegram bot configuration parameters
 ##### Payload
-```json lines
+```javascript
 {
   "token": string // User's Telegram bot token
 }
 ```
 ##### Response
-```json
+```javascript
 {
   "result": "SUCCESS"
 }
@@ -100,7 +100,7 @@ Updates user's Telegram bot configuration parameters
 #### PUT /users/details
 Updates user details
 ##### Payload
-```json lines
+```javascript
 {
   "rate": number, // Hourly pay rate in local currency
   "experience": number, // Years of experience
@@ -108,7 +108,7 @@ Updates user details
 }
 ```
 ##### Response
-```json
+```javascript
 {
   "result": "SUCCESS"
 }
@@ -117,13 +117,13 @@ Updates user details
 #### PUT /users/payment
 Updates user payment parameters
 ##### Payload
-```json lines
+```javascript
 {
   "card_number": string // User's bank card number, to which payments will be sent from patients
 }
 ```
 ##### Response
-```json
+```javascript
 {
   "result": "SUCCESS"
 }
@@ -132,7 +132,7 @@ Updates user payment parameters
 #### GET /users/me
 Fetches authenticated user parameters
 ##### Response
-```json lines
+```javascript
 {
   "id": string,
   "created_at": string,
@@ -152,7 +152,7 @@ Fetches authenticated user parameters
 #### GET /users/me/consultations
 Fetches authenticated user's consultations
 ##### Response
-```json lines
+```javascript
 {
   "id": string,
   "created_at": string,
@@ -169,7 +169,7 @@ Fetches authenticated user's consultations
 #### GET /consultations/:consultationId
 Fetches consultation by ID
 ##### Response
-```json lines
+```javascript
 {
   "id": string,
   "created_at": string,
@@ -184,7 +184,7 @@ Fetches consultation by ID
 #### GET /consultations/:consultationId/messages
 Fetch messages by consultation ID
 ##### Response
-```json lines
+```javascript
 {
   "id": string,
   "text": string,
@@ -196,13 +196,13 @@ Fetch messages by consultation ID
 #### POST /consultations/:consultationId/reply
 Sends message to the open consultation Telegram chat
 ##### Payload
-```json lines
+```javascript
 {
   "text": string
 }
 ```
 ##### Response
-```json lines
+```javascript
 {
   "id": string,
   "text": string,
@@ -214,7 +214,7 @@ Sends message to the open consultation Telegram chat
 #### PUT /consultations/:consultationId/start
 Launches the consultation flow. Changes status of consultation from `NEW` to `PENDING`.
 ##### Response
-```json lines
+```javascript
 {
   "result": "SUCCESS",
   "status": "PENDING"
@@ -224,7 +224,7 @@ Launches the consultation flow. Changes status of consultation from `NEW` to `PE
 #### PUT /consultations/:consultationId/prepaid
 Marks consultation as prepaid. Changes status of consultation from `PENDING` to `PREPAID`.
 ##### Response
-```json lines
+```javascript
 {
   "result": "SUCCESS",
   "status": "PREPAID"
@@ -234,7 +234,7 @@ Marks consultation as prepaid. Changes status of consultation from `PENDING` to 
 #### PUT /consultations/:consultationId/complete
 Completes the consultation. Changes consultation status to `WAIT_PAYMENT`.
 ##### Response
-```json lines
+```javascript
 {
   "result": "SUCCESS",
   "status": "WAIT_PAYMENT"
